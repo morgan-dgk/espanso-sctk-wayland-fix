@@ -1,10 +1,11 @@
-use log::debug;
-use std::io::{Read, Seek};
-use std::os::fd::{FromRawFd, AsRawFd};
-use std::{fs::File, os::fd::OwnedFd};
-use wayland_client::{
-    protocol::{wl_keyboard, wl_registry, wl_seat},
-    Connection, Dispatch, QueueHandle, WEnum,
+use {
+    std::usize,
+    log::debug,
+    wayland_client::{
+        protocol::{wl_keyboard, wl_registry, wl_seat},
+        Connection, Dispatch, QueueHandle, WEnum,
+    },
+    xkbcommon::xkb,
 };
 
 
