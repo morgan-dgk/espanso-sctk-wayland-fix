@@ -9,13 +9,21 @@ use {
 };
 
 
-fn read_xkb_keymap(fd: OwnedFd) -> () {
-    let mut f = unsafe { File::from_raw_fd(fd.as_raw_fd()) };
-    let mut map = String::new();
-    f.rewind().unwrap();
-    f.read_to_string(&mut map).unwrap();
-    println!("{:?}", map);
-}
+fn read_xkb_keymap(fd: OwnedFd, size: usize) -> () {
+    let xkb_context = xkb::Context::new(xkb::CONTEXT_NO_FLAGS);
+    let keymap = unsafe {
+        xkb::Keymap::new_from_fd(
+            &context,
+            fd,
+            size,
+            xkb::KEYMAP_FORMAT_TEXT_V1,
+            xkb::KEYMAP_COMPILE_NO_FLAGS,
+        )
+    };
+    println!("{:?}", Ok(keymap).get_string());
+    Ok(keymap)
+
+    }
 
 #[derive(Debug)]
 struct AppData;
@@ -40,7 +48,6 @@ impl Dispatch<wl_registry::WlRegistry, ()> for AppData {
                 "wl_seat" => {
                     registry.bind::<wl_seat::WlSeat, _, _>(name, 1, qh, ());
                 }
-
                 _ => {}
             }
         }
